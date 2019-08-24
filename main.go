@@ -42,22 +42,27 @@ func main() {
 func videoDownload(url string) (filename *string, err error) {
 	y := youtube.NewYoutube(true)
 
+	// URLから動画IDを抽出
 	if err = y.DecodeURL(url); err != nil {
 		return nil, err
 	}
 
+	// 保存先の定義
 	videoDir := "./videos/"
 	videoPath := filepath.Join(videoDir, y.VideoID+".mp4")
 	fmt.Println("video:", videoPath)
 
+	// ダウンロード済みのファイルがあればそれを使用する
 	if fileExist(videoPath) {
 		fmt.Println("video:", "Already exist.")
 		return &videoPath, nil
 	}
 
+	// 動画のダウンロード
 	if err := y.StartDownload(videoPath); err != nil {
 		return nil, err
 	}
+
 	fmt.Println("video:", "Download complete!")
 
 	return &videoPath, nil
